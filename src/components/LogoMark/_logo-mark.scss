@@ -1,0 +1,47 @@
+.logo-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--logo-size, 170px);
+  aspect-ratio: 1;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+}
+
+.logo-mark__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.logo-mark__part {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.logo-mark__part--symbol {
+  z-index: 3;
+}
+
+.logo-mark__part--text {
+  z-index: 2;
+}
+
+.logo-mark__part--circles {
+  z-index: 1;
+}

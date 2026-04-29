@@ -1,0 +1,425 @@
+.landing-greeting {
+  --page-bg: #f7f5f0;
+  --page-text: #171612;
+  --page-muted: rgba(23, 22, 18, 0.46);
+  --page-soft: rgba(23, 22, 18, 0.16);
+
+  /*
+    TROUGAO:
+    - --triangle-base je jedina glavna mjera.
+    - Visina jednakostraničnog trougla je base * sqrt(3) / 2.
+    - 0.8660254 = sqrt(3) / 2.
+  */
+  --triangle-base: min(760px, 58vw);
+  --triangle-height: calc(var(--triangle-base) * 0.8660254);
+
+  /*
+    Logo se skalira nezavisno od trougla.
+    Ako kasnije praviš veći/manji sistem, prvo mijenjaš --triangle-base,
+    a zatim samo fino podesiš --mark-size.
+  */
+  --mark-size: clamp(150px, 10vw, 205px);
+
+  /*
+    Centar trougla unutar stage-a.
+    Pomjeranjem ove vrijednosti spuštaš/podižeš cijeli sistem,
+    bez kvarenja jednakostraničnih koordinata.
+  */
+  --triangle-center-y: 50%;
+
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: var(--page-bg);
+  color: var(--page-text);
+}
+
+.landing-greeting__language {
+  position: fixed;
+  top: 42px;
+  right: 54px;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.landing-greeting__language-button {
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: 0 0 5px;
+  background: transparent;
+  color: var(--page-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+
+  &:hover,
+  &--active {
+    color: var(--page-text);
+    border-color: currentColor;
+  }
+}
+
+.landing-greeting__language-separator {
+  color: rgba(23, 22, 18, 0.2);
+}
+
+.landing-greeting__intro {
+  position: relative;
+  z-index: 5;
+  max-width: 760px;
+  margin: 72px auto 0;
+  padding: 0 24px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-8px);
+  animation: greetingIntroIn 0.8s 0.35s ease forwards;
+}
+
+.landing-greeting__kicker,
+.landing-greeting__keywords {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--page-muted);
+}
+
+.landing-greeting__statement {
+  margin: 18px 0;
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.2vw, 21px);
+  font-weight: 300;
+  line-height: 1.35;
+  color: var(--page-text);
+}
+
+.landing-greeting__keywords {
+  color: rgba(23, 22, 18, 0.28);
+}
+
+.landing-greeting__stage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 185px;
+  bottom: 80px;
+  z-index: 3;
+}
+
+/*
+  BAZNA POZICIJA SVIH LOGOA
+
+  Svaki logo je apsolutno pozicioniran unutar stage-a.
+  Koordinate su izvedene iz istog trougla:
+
+  UP:
+  x = 50%
+  y = centerY - height / 2
+
+  ARHITEKTURA:
+  x = 50% - base / 2
+  y = centerY + height / 2
+
+  ALHEMIJA:
+  x = 50% + base / 2
+  y = centerY + height / 2
+
+  ALTERNATIVA:
+  x = 50%
+  y = centerY + height / 2
+*/
+.landing-greeting__mark {
+  position: absolute;
+  width: var(--mark-size);
+  height: var(--mark-size);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--page-text);
+  cursor: pointer;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.82);
+  animation: greetingMarkIn 0.8s ease forwards;
+  transition: opacity 0.24s ease;
+
+  &:hover {
+    opacity: 0.72 !important;
+
+    .landing-greeting__seal {
+      transform: scale(1.035);
+    }
+
+    .landing-greeting__seal-ring--outer {
+      border-color: rgba(23, 22, 18, 0.55);
+    }
+
+    .landing-greeting__seal-ring--inner {
+      border-color: rgba(23, 22, 18, 0.38);
+    }
+  }
+}
+
+.landing-greeting__mark--main {
+  left: 50%;
+  top: calc(var(--triangle-center-y) - (var(--triangle-height) / 2));
+  animation-delay: 0.9s;
+}
+
+.landing-greeting__mark--bottom-left {
+  left: calc(50% - (var(--triangle-base) / 2));
+  top: calc(var(--triangle-center-y) + (var(--triangle-height) / 2));
+  animation-delay: 1.1s;
+}
+
+.landing-greeting__mark--bottom-center {
+  left: 50%;
+  top: calc(var(--triangle-center-y) + (var(--triangle-height) / 2));
+  animation-delay: 1.25s;
+}
+
+.landing-greeting__mark--bottom-right {
+  left: calc(50% + (var(--triangle-base) / 2));
+  top: calc(var(--triangle-center-y) + (var(--triangle-height) / 2));
+  animation-delay: 1.4s;
+}
+
+.landing-greeting__seal {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.landing-greeting__seal-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.landing-greeting__seal-ring--outer {
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(23, 22, 18, 0.88);
+  transition: border-color 0.25s ease;
+}
+
+.landing-greeting__seal-ring--inner {
+  width: 70%;
+  height: 70%;
+  border: 2px solid rgba(23, 22, 18, 0.76);
+  transition: border-color 0.25s ease;
+}
+
+.landing-greeting__seal-dot {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--page-text);
+}
+
+.landing-greeting__seal-dot--left {
+  left: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.landing-greeting__seal-dot--right {
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.landing-greeting__seal-dot--bottom {
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+}
+
+.landing-greeting__main-symbol,
+.landing-greeting__branch-symbol {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1;
+  color: #000;
+}
+
+.landing-greeting__main-symbol {
+  font-size: calc(var(--mark-size) * 0.52);
+}
+
+.landing-greeting__branch-symbol {
+  font-size: calc(var(--mark-size) * 0.48);
+}
+
+.landing-greeting__seal-label,
+.landing-greeting__branch-title {
+  position: absolute;
+  left: 50%;
+  font-family: var(--serif);
+  font-size: calc(var(--mark-size) * 0.08);
+  font-weight: 600;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.landing-greeting__seal-label {
+  bottom: 6%;
+}
+
+.landing-greeting__branch-title {
+  top: 11%;
+}
+
+@keyframes greetingIntroIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes greetingMarkIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.82);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.045);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/*
+  RESPONSIVE:
+  Ne mijenjamo pojedinačne koordinate.
+  Samo mijenjamo --triangle-base, --mark-size i po potrebi --triangle-center-y.
+*/
+@media (max-width: 1280px) {
+  .landing-greeting {
+    --triangle-base: min(680px, 64vw);
+    --mark-size: clamp(145px, 11vw, 190px);
+  }
+
+  .landing-greeting__stage {
+    top: 180px;
+    bottom: 70px;
+  }
+}
+
+@media (max-width: 980px) {
+  .landing-greeting {
+    --triangle-base: min(560px, 78vw);
+    --mark-size: clamp(125px, 16vw, 165px);
+    --triangle-center-y: 52%;
+  }
+
+  .landing-greeting__intro {
+    margin-top: 72px;
+  }
+
+  .landing-greeting__stage {
+    top: 185px;
+    bottom: 64px;
+  }
+}
+
+@media (max-width: 720px) {
+  .landing-greeting {
+    --triangle-base: min(360px, 84vw);
+    --mark-size: clamp(92px, 24vw, 128px);
+    --triangle-center-y: 54%;
+  }
+
+  .landing-greeting__language {
+    top: 26px;
+    right: 24px;
+    font-size: 10px;
+  }
+
+  .landing-greeting__intro {
+    margin-top: 74px;
+    max-width: 420px;
+  }
+
+  .landing-greeting__kicker,
+  .landing-greeting__keywords {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+  }
+
+  .landing-greeting__statement {
+    margin: 14px 0;
+    font-size: 16px;
+  }
+
+  .landing-greeting__stage {
+    top: 220px;
+    bottom: 46px;
+  }
+
+  .landing-greeting__seal-ring--outer {
+    border-width: 2px;
+  }
+
+  .landing-greeting__seal-ring--inner {
+    border-width: 1px;
+  }
+
+  .landing-greeting__seal-dot {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 1600px) {
+    .landing-greeting {
+    --triangle-base: min(300px, 82vw);
+    --mark-size: 92px;
+    --triangle-center-y: 55%;
+  }
+}
+
+@media (max-width: 430px) {
+  .landing-greeting {
+    --triangle-base: min(300px, 82vw);
+    --mark-size: 92px;
+    --triangle-center-y: 55%;
+  }
+
+  .landing-greeting__intro {
+    padding: 0 18px;
+  }
+
+  .landing-greeting__stage {
+    top: 235px;
+    bottom: 38px;
+  }
+}
